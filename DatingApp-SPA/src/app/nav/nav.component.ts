@@ -6,10 +6,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent implements OnInit {
+  public model: any = {};
 
   constructor() { }
 
   ngOnInit() {
   }
 
+  public login(): void {
+    console.log(this.model);
+  }
 }
