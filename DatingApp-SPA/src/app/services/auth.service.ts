@@ -10,7 +10,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(model: any) {
+  public login(model: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
     return this.http.post(this.baseUrl + 'login', JSON.stringify(model), {headers})
       .pipe(
@@ -22,6 +22,11 @@ export class AuthService {
           }
         })
       );
+  }
+
+  public register(model: any) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.http.post(this.baseUrl + 'register', model, {headers});
   }
 
 }
