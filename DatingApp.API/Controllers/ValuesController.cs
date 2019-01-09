@@ -9,6 +9,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers
 {
+    /// <summary>
+    /// Example controller. Returns static values for testing.
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
@@ -16,9 +19,17 @@ namespace DatingApp.API.Controllers
     {
         private readonly DataContext _dataContext;
 
+        /// <summary>
+        /// Constructor. Intitializes data context.
+        /// </summary>
+        /// <param name="dataContext"></param>
         public ValuesController(DataContext dataContext) => _dataContext = dataContext;
 
-        // GET api/values
+        /// <summary>
+        /// Returns a collection of test values.
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetValues()
         {
@@ -27,6 +38,11 @@ namespace DatingApp.API.Controllers
             return Ok(values);
         }
 
+        /// <summary>
+        /// Returns a single test value.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
@@ -36,19 +52,29 @@ namespace DatingApp.API.Controllers
             return Ok(value);
         }
 
-        // POST api/values
+        /// <summary>
+        /// Creates a test value.
+        /// </summary>
+        /// <param name="value"></param>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
-        // PUT api/values/5
+        /// <summary>
+        /// Updates a test value.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
-        // DELETE api/values/5
+        /// <summary>
+        /// Deletes a test value.
+        /// </summary>
+        /// <param name="id"></param>
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
