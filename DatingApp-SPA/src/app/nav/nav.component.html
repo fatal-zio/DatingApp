@@ -10,7 +10,7 @@
 
   <div class="dropdown" *ngIf="loggedIn()">
     <a class="dropdown-toggle text-light">
-      Welcome User
+      Welcome {{this.authService.getUser() | titlecase}}
     </a>
 
     <div class="dropdown-menu">
