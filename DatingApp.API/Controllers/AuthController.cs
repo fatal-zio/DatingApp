@@ -15,7 +15,7 @@ namespace DatingApp.API.Controllers
     /// <summary>
     /// Controller for User Authorization.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController: ControllerBase
     {

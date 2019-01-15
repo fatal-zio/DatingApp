@@ -12,7 +12,7 @@ namespace DatingApp.API.Controllers
     /// <summary>
     /// Example controller. Returns static values for testing.
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/values")]
     [ApiController]
     [Authorize]
     public class ValuesController : ControllerBase
