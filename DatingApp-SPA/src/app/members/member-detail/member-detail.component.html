@@ -1,5 +1,8 @@
 <div class="container mt-4">
   <div class="row">
+    <h4>{{user.knownAs}}'s Profile</h4>
+  </div>
+  <div class="row">
     <div class="col-sm-4">
       <div class="card">
         <img
@@ -36,22 +39,23 @@
     <div class="col-sm-8">
       <div class="tab-panel">
         <tabset class="member-tabset">
-          <tab heading="About {{user.knownAs}}">
+          <tab heading="About {{ user.knownAs }}">
             <h4>Description</h4>
-            <p>{{user.introduction}}</p>
+            <p>{{ user.introduction }}</p>
             <h4>Looking For</h4>
-            <p>{{user.lookingFor}}</p>
+            <p>{{ user.lookingFor }}</p>
           </tab>
           <tab heading="Interests">
             <h4>Interests</h4>
-            <p>{{user.interests}}</p>
+            <p>{{ user.interests }}</p>
           </tab>
           <tab heading="Photos">
-            <p>Photos will go here.</p>
+            <ngx-gallery
+              [options]="galleryOptions"
+              [images]="galleryImages"
+            ></ngx-gallery>
           </tab>
-          <tab heading="Messages">
-            <p>Messages will go here.</p>
-          </tab>
+          <tab heading="Messages"> <p>Messages will go here.</p> </tab>
         </tabset>
       </div>
     </div>
