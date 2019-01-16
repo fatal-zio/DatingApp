@@ -48,4 +48,14 @@ export class AuthService {
     }
   }
 
+  public getNameId(): string {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      return this.jwtHelper.decodeToken(token).nameid;
+    } else {
+      return '';
+    }
+  }
+
 }
