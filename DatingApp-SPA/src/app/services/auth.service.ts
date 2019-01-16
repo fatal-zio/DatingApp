@@ -48,13 +48,13 @@ export class AuthService {
     }
   }
 
-  public getNameId(): string {
+  public getNameId(): number {
     const token = localStorage.getItem('token');
 
     if (token) {
-      return this.jwtHelper.decodeToken(token).nameid;
+      return +this.jwtHelper.decodeToken(token).nameid;
     } else {
-      return '';
+      return null;
     }
   }
 

@@ -22,4 +22,9 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
     return this.http.get<User>(this.baseUrl + id, {headers});
   }
+
+  public updateUser(id: number, user: User) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    return this.http.put<User>(this.baseUrl + id, user, {headers});
+  }
 }
