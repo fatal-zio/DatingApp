@@ -24,6 +24,7 @@ import { MemberDetailResolver } from './resolvers/member-detail.resolver';
 import { MemberListResolver } from './resolvers/member-list.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './resolvers/member-edit.resolver';
+import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { MemberEditResolver } from './resolvers/member-edit.resolver';
   providers: [
     ErrorInterceptorProvider,
     AuthGuard,
+    PreventUnsavedChangesGuard,
     MemberDetailResolver,
     MemberListResolver,
     MemberEditResolver
