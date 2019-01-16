@@ -4,7 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { BsDropdownModule } from 'ngx-bootstrap';
+import { BsDropdownModule, TabsModule } from 'ngx-bootstrap';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,6 +19,8 @@ import { AuthGuard } from './guards/auth.guard';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MemberCardComponent } from './members/member-card/member-card.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
+import { MemberDetailResolver } from './resolvers/member-detail.resolver';
+import { MemberListResolver } from './resolvers/member-list.resolver';
 
 @NgModule({
   declarations: [
@@ -38,9 +40,15 @@ import { MemberDetailComponent } from './members/member-detail/member-detail.com
     HttpClientModule,
     FormsModule,
     BsDropdownModule.forRoot(),
-    RouterModule.forRoot(appRoutes)
+    RouterModule.forRoot(appRoutes),
+    TabsModule.forRoot()
   ],
-  providers: [ErrorInterceptorProvider, AuthGuard],
+  providers: [
+    ErrorInterceptorProvider,
+    AuthGuard,
+    MemberDetailResolver,
+    MemberListResolver
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
