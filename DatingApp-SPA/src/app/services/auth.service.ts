@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment.prod';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class AuthService {
 
   private baseUrl = environment.apiUrl + 'auth/';
   private jwtHelper = new JwtHelperService();
+  private currentUser: User;
 
   constructor(private http: HttpClient) { }
 
@@ -23,6 +25,9 @@ export class AuthService {
 
           if (user) {
             localStorage.setItem('token', user.token);
+            console.log(user.user);
+            localStorage.setItem('user', JSON.stringify(user.user));
+            this.currentUser = user.user;
           }
         })
       );
@@ -38,7 +43,7 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  public getUser(): string {
+  public getUsername(): string {
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -46,6 +51,14 @@ export class AuthService {
     } else {
       return '';
     }
+  }
+
+  public setUser(user: User): void {
+    this.currentUser = user;
+  }
+
+  public getUserPhotoUrl(): string {
+    return this.currentUser.photoUrl;
   }
 
   public getNameId(): number {
