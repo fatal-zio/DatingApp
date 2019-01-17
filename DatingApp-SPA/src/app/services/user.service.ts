@@ -27,4 +27,9 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
     return this.http.put<User>(this.baseUrl + id, user, {headers});
   }
+
+  public setMainPhoto(userId: number, photoId: number) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    return this.http.post(this.baseUrl + userId + '/photos/' + photoId + '/setmain', {}, {headers});
+  }
 }

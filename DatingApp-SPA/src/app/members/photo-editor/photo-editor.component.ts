@@ -1,9 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Photo } from '../../models/photo';
 import { FileUploader } from 'ng2-file-upload';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../services/auth.service';
-import { reduce } from 'rxjs/operators';
+import { UserService } from '../../services/user.service';
+import { AlertifyService } from 'src/app/services/alertify.service';
 
 @Component({
   selector: 'app-photo-editor',
@@ -12,11 +13,17 @@ import { reduce } from 'rxjs/operators';
 })
 export class PhotoEditorComponent implements OnInit {
   @Input() photos: Photo[];
+  @Output() getMemberPhotoChange = new EventEmitter<string>();
   public uploader: FileUploader;
   public hasBaseDropZoneOver = true;
+  public currentMainPhoto: Photo;
   private baseUrl = environment.apiUrl;
 
-  constructor(private authService: AuthService) { }
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+    private alertifyService: AlertifyService
+  ) {}
 
   ngOnInit() {
     this.initilizeUploader();
@@ -37,11 +44,13 @@ export class PhotoEditorComponent implements OnInit {
       maxFileSize: 10 * 1024 * 1024
     });
 
-    this.uploader.onAfterAddingFile = (file) => { file.withCredentials = false; };
+    this.uploader.onAfterAddingFile = file => {
+      file.withCredentials = false;
+    };
 
     this.uploader.onSuccessItem = (item, response, status, headers) => {
       const res: Photo = JSON.parse(response);
-      const photo =  {
+      const photo = {
         id: res.id,
         url: res.url,
         dateAdded: res.dateAdded,
@@ -53,4 +62,14 @@ export class PhotoEditorComponent implements OnInit {
     };
   }
 
+  public setMainPhoto(photo: Photo) {
+    this.userService.setMainPhoto(this.authService.getNameId(), photo.id).subscribe(() => {
+      this.currentMainPhoto = this.photos.filter(o => o.isMain === true)[0];
+      this.currentMainPhoto.isMain = false;
+      photo.isMain = true;
+      this.getMemberPhotoChange.emit(photo.url);
+    }, error => {
+      this.alertifyService.error(error);
+    });
+  }
 }
