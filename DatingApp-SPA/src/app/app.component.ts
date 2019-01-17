@@ -12,10 +12,11 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    const user = localStorage.getItem('user');
+    const user = JSON.parse(localStorage.getItem('user'));
 
     if (user) {
-      this.authService.setUser(JSON.parse(user));
+      this.authService.setUser(user);
+      this.authService.updateMemberPhoto(user.photoUrl);
     }
   }
 }

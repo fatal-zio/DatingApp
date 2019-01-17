@@ -1,18 +1,20 @@
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from '../../environments/environment';
 import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
+  public photoUrl = new BehaviorSubject<string>('../../assets/user.png');
   private baseUrl = environment.apiUrl + 'auth/';
   private jwtHelper = new JwtHelperService();
   private currentUser: User;
+  public currentPhotoUrl = this.photoUrl.asObservable();
 
   constructor(private http: HttpClient) { }
 
@@ -25,12 +27,18 @@ export class AuthService {
 
           if (user) {
             localStorage.setItem('token', user.token);
-            console.log(user.user);
             localStorage.setItem('user', JSON.stringify(user.user));
             this.currentUser = user.user;
+            this.updateMemberPhoto(this.currentUser.photoUrl);
           }
         })
       );
+  }
+
+  public updateMemberPhoto(photoUrl: string) {
+    this.photoUrl.next(photoUrl);
+    this.currentUser.photoUrl = photoUrl;
+    localStorage.setItem('user', JSON.stringify(this.currentUser));
   }
 
   public register(model: any) {
@@ -55,10 +63,6 @@ export class AuthService {
 
   public setUser(user: User): void {
     this.currentUser = user;
-  }
-
-  public getUserPhotoUrl(): string {
-    return this.currentUser.photoUrl;
   }
 
   public getNameId(): number {
