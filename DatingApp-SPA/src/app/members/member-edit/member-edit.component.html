@@ -90,7 +90,9 @@
               </div>
             </form>
           </tab>
-          <tab heading="Edit Photos"> <p>Photo edit goes here.</p> </tab>
+          <tab heading="Edit Photos">
+            <app-photo-editor [photos]="user.photos"></app-photo-editor>
+          </tab>
         </tabset>
       </div>
     </div>
