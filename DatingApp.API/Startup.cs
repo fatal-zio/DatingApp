@@ -110,8 +110,10 @@ namespace DatingApp.API
                 cfg.CreateMap<User, UserForDetailedDto>()
                     .ForMember(d => d.Age, opt => opt.MapFrom(s => s.DateOfBirth.CalculateAge()))
                     .ForMember(d => d.PhotoUrl, opt => opt.MapFrom(s => s.Photos.FirstOrDefault(p => p.IsMain).Url));
-                cfg.CreateMap<Photo, PhotosForDetailedDto>();
+                cfg.CreateMap<Photo, PhotoForDetailedDto>();
                 cfg.CreateMap<UserForUpdateDto, User>();
+                cfg.CreateMap<Photo, PhotoForReturnDto>();
+                cfg.CreateMap<PhotoForCreationDto, Photo>();
             });
 
             // app.UseHttpsRedirection();
