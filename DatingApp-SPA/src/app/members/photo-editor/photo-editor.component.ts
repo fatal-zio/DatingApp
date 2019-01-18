@@ -49,38 +49,57 @@ export class PhotoEditorComponent implements OnInit {
     };
 
     this.uploader.onSuccessItem = (item, response, status, headers) => {
-      const res: Photo = JSON.parse(response);
-      const photo = {
-        id: res.id,
-        url: res.url,
-        dateAdded: res.dateAdded,
-        description: res.description,
-        isMain: res.isMain
-      };
+      if (response) {
+        const res: Photo = JSON.parse(response);
+        const photo = {
+          id: res.id,
+          url: res.url,
+          dateAdded: res.dateAdded,
+          description: res.description,
+          isMain: res.isMain
+        };
 
-      this.photos.push(photo);
+        this.photos.push(photo);
+
+        if (res.isMain) {
+          this.authService.updateMemberPhoto(photo.url);
+        }
+      }
     };
   }
 
   public setMainPhoto(photo: Photo) {
-    this.userService.setMainPhoto(this.authService.getNameId(), photo.id).subscribe(() => {
-      this.currentMainPhoto = this.photos.filter(o => o.isMain === true)[0];
-      this.currentMainPhoto.isMain = false;
-      photo.isMain = true;
-      this.authService.updateMemberPhoto(photo.url);
-    }, error => {
-      this.alertifyService.error(error);
-    });
+    this.userService
+      .setMainPhoto(this.authService.getNameId(), photo.id)
+      .subscribe(
+        () => {
+          this.currentMainPhoto = this.photos.filter(o => o.isMain === true)[0];
+          this.currentMainPhoto.isMain = false;
+          photo.isMain = true;
+          this.authService.updateMemberPhoto(photo.url);
+        },
+        error => {
+          this.alertifyService.error(error);
+        }
+      );
   }
 
   public deletePhoto(id: number) {
-    this.alertifyService.confirm('Are you sure you want to delete this photo?', () => {
-      this.userService.deletePhoto(this.authService.getNameId(), id).subscribe(() => {
-        this.photos.splice(this.photos.findIndex(o => o.id === id), 1);
-        this.alertifyService.success('Photo deleted.');
-      }, error => {
-        this.alertifyService.error(error);
-      });
-    });
+    this.alertifyService.confirm(
+      'Are you sure you want to delete this photo?',
+      () => {
+        this.userService
+          .deletePhoto(this.authService.getNameId(), id)
+          .subscribe(
+            () => {
+              this.photos.splice(this.photos.findIndex(o => o.id === id), 1);
+              this.alertifyService.success('Photo deleted.');
+            },
+            error => {
+              this.alertifyService.error(error);
+            }
+          );
+      }
+    );
   }
 }
