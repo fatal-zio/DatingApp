@@ -1,12 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { AlertifyService } from '../services/alertify.service';
 import {
   FormGroup,
-  FormControl,
   Validators,
   FormBuilder
 } from '@angular/forms';
+import { BsDatepickerConfig } from 'ngx-bootstrap';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +17,7 @@ export class RegisterComponent implements OnInit {
   @Output() cancelRegistration = new EventEmitter();
   public model: any = {};
   public registerForm: FormGroup;
+  public bsConfig: Partial<BsDatepickerConfig>;
 
   constructor(
     private authService: AuthService,
@@ -25,6 +26,9 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.bsConfig = {
+      containerClass: 'theme-dark-blue'
+    };
     this.createRegisterForm();
   }
 
