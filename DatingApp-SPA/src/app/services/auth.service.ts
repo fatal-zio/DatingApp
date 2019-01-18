@@ -41,9 +41,9 @@ export class AuthService {
     localStorage.setItem('user', JSON.stringify(this.currentUser));
   }
 
-  public register(model: any) {
+  public register(user: User) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post(this.baseUrl + 'register', model, {headers});
+    return this.http.post(this.baseUrl + 'register', user, {headers});
   }
 
   public loggedIn() {
