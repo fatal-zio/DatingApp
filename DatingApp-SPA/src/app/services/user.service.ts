@@ -32,4 +32,9 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
     return this.http.post(this.baseUrl + userId + '/photos/' + photoId + '/setmain', {}, {headers});
   }
+
+  public deletePhoto(userId: number, photoId: number) {
+    const headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    return this.http.delete(this.baseUrl + userId + '/photos/' + photoId, {headers});
+  }
 }
