@@ -8,7 +8,8 @@ import {
   BsDropdownModule,
   TabsModule,
   BsDatepickerModule,
-  PaginationModule
+  PaginationModule,
+  ButtonsModule
 } from 'ngx-bootstrap';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -57,6 +58,7 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
     ReactiveFormsModule,
     NgxGalleryModule,
     PaginationModule.forRoot(),
+    ButtonsModule.forRoot(),
     FileUploadModule,
     BsDropdownModule.forRoot(),
     RouterModule.forRoot(appRoutes),

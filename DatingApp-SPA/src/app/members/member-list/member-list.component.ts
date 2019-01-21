@@ -29,18 +29,19 @@ export class MemberListComponent implements OnInit {
       this.pagination = data['users'].pagination;
     });
 
-    this.setDefaultFilters();
+    this.setDefaultFilterAndSort();
   }
 
-  public resetFilters(): void {
-    this.setDefaultFilters();
+  public resetFilterAndSort(): void {
+    this.setDefaultFilterAndSort();
     this.loadUsers();
   }
 
-  private setDefaultFilters(): void {
+  private setDefaultFilterAndSort(): void {
     this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
+    this.userParams.orderBy = 'lastActive';
   }
 
   public pageChanged(event: any): void {
@@ -48,7 +49,7 @@ export class MemberListComponent implements OnInit {
     this.loadUsers();
   }
 
-  private loadUsers() {
+  public loadUsers() {
     this.userService
       .getUsers(this.pagination.currentPage, this.pagination.itemsPerPage, this.userParams)
       .subscribe(
