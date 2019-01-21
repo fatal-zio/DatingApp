@@ -34,6 +34,7 @@ import { MemberEditComponent } from './members/member-edit/member-edit.component
 import { MemberEditResolver } from './resolvers/member-edit.resolver';
 import { PreventUnsavedChangesGuard } from './guards/prevent-unsaved-changes.guard';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
+import { ListsResolver } from './resolvers/lists.resolver';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { PhotoEditorComponent } from './members/photo-editor/photo-editor.compon
     PreventUnsavedChangesGuard,
     MemberDetailResolver,
     MemberListResolver,
-    MemberEditResolver
+    MemberEditResolver,
+    ListsResolver
   ],
   bootstrap: [AppComponent]
 })
