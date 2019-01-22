@@ -12,6 +12,7 @@ import { AlertifyService } from 'src/app/services/alertify.service';
 export class MemberMessagesComponent implements OnInit {
   @Input() recipientId: number;
   public messages: Message[];
+  public newMessage: any = {};
 
   constructor(
     private userService: UserService,
@@ -21,6 +22,7 @@ export class MemberMessagesComponent implements OnInit {
 
   ngOnInit() {
     this.loadMessages();
+    console.log(this.messages);
   }
 
   public loadMessages() {
@@ -29,6 +31,21 @@ export class MemberMessagesComponent implements OnInit {
       .subscribe(
         messages => {
           this.messages = messages;
+        },
+        error => {
+          this.alertifyService.error(error);
+        }
+      );
+  }
+
+  public sendMessage() {
+    this.newMessage.recipientId = this.recipientId;
+    this.userService
+      .sendMessage(this.authService.getNameId(), this.newMessage)
+      .subscribe(
+        (message: Message) => {
+          this.messages.unshift(message);
+          this.newMessage.content = '';
         },
         error => {
           this.alertifyService.error(error);

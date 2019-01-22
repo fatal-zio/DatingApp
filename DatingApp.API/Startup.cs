@@ -118,8 +118,8 @@ namespace DatingApp.API
                 cfg.CreateMap<UserForRegistrationDto, User>();
                 cfg.CreateMap<MessageForCreationDto, Message>().ReverseMap();
                 cfg.CreateMap<Message, MessageToReturnDto>()
-                    .ForMember(d => d.SenderPhotoUrl, opt => opt.MapFrom(s => s.Sender.Photos.FirstOrDefault(o => o.IsMain)))
-                    .ForMember(d => d.RecipientPhotoUrl, opt => opt.MapFrom(s => s.Recipient.Photos.FirstOrDefault(o => o.IsMain)));
+                    .ForMember(d => d.SenderPhotoUrl, opt => opt.MapFrom(s => s.Sender.Photos.FirstOrDefault(o => o.IsMain).Url))
+                    .ForMember(d => d.RecipientPhotoUrl, opt => opt.MapFrom(s => s.Recipient.Photos.FirstOrDefault(o => o.IsMain).Url));
             });
 
             // app.UseHttpsRedirection();

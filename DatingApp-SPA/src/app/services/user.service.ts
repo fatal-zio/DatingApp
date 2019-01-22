@@ -12,6 +12,7 @@ import { Message } from '../models/message';
 })
 export class UserService {
   private baseUrl = environment.apiUrl + 'users/';
+  private headers;
 
   constructor(private http: HttpClient) {}
 
@@ -167,5 +168,14 @@ export class UserService {
       this.baseUrl + id + '/messages/thread/' + recipientId,
       { headers }
     );
+  }
+
+  public sendMessage(id: number, message: Message) {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('token')
+    );
+
+    return this.http.post(this.baseUrl + id + '/messages', message, { headers });
   }
 }
