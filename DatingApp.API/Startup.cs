@@ -116,7 +116,7 @@ namespace DatingApp.API
                 cfg.CreateMap<Photo, PhotoForReturnDto>();
                 cfg.CreateMap<PhotoForCreationDto, Photo>();
                 cfg.CreateMap<UserForRegistrationDto, User>();
-                cfg.CreateMap<MessageForCreationDto, Message>();
+                cfg.CreateMap<MessageForCreationDto, Message>().ReverseMap();
             });
 
             // app.UseHttpsRedirection();
