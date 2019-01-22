@@ -99,5 +99,35 @@ namespace DatingApp.API.Controllers
                 CreatedAtRoute("GetMessage", new {id = message.Id}, Mapper.Map<MessageToReturnDto>(message)) :
                 throw new ApplicationException("Error saving message.");
         }
+
+        [HttpPost("{id}")]
+        public async Task<IActionResult> DeleteMessage(int id, int userId)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var messageFromRepo = await _repo.GetMessage(id);
+
+            if (messageFromRepo.SenderId == userId)
+            {
+                messageFromRepo.SenderDeleted = true;
+            }
+
+            if (messageFromRepo.RecipientId == userId)
+            {
+                messageFromRepo.RecipientDeleted = true;
+            }
+
+            if (messageFromRepo.SenderDeleted && messageFromRepo.RecipientDeleted)
+            {
+                _repo.Delete(messageFromRepo);
+            }
+
+            return (await _repo.SaveAll()) ? 
+                NoContent() :
+                throw new ApplicationException("Error deleting message.");
+        }
     }
 }
