@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { PaginatedResult } from '../models/pagination';
 import { map } from 'rxjs/operators';
+import { Message } from '../models/message';
 
 @Injectable({
   providedIn: 'root'
@@ -116,5 +117,43 @@ export class UserService {
       {},
       { headers }
     );
+  }
+
+  public getMessages(id: number, page?, itemsPerPage?, messageContainer?) {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('token')
+    );
+    const paginatedResult: PaginatedResult<Message[]> = new PaginatedResult<
+      Message[]
+    >();
+
+    let params = new HttpParams();
+
+    params = params.append('MessageContainer', messageContainer);
+
+    if (page != null && itemsPerPage != null) {
+      params = params.append('pageNumber', page);
+      params = params.append('pageSize', itemsPerPage);
+    }
+
+    return this.http
+      .get<Message[]>(this.baseUrl + id + '/messages', {
+        observe: 'response',
+        headers: headers,
+        params: params
+      })
+      .pipe(
+        map(response => {
+          paginatedResult.result = response.body;
+          if (response.headers.get('Pagination') !== null) {
+            paginatedResult.pagination = JSON.parse(
+              response.headers.get('Pagination')
+            );
+          }
+
+          return paginatedResult;
+        })
+      );
   }
 }

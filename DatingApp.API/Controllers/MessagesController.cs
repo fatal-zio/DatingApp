@@ -22,7 +22,7 @@ namespace DatingApp.API.Controllers
 
         public MessagesController(IDatingRepository repo) => _repo = repo;
 
-        [HttpGet("{id}", Name = "Getmessage")]
+        [HttpGet("{id}", Name = "GetMessage")]
         public async Task<IActionResult> GetMessage(int userId, int id)
         {
             if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
