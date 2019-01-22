@@ -55,7 +55,7 @@
               [images]="galleryImages"
             ></ngx-gallery>
           </tab>
-          <tab heading="Messages"> <p>Messages will go here.</p> </tab>
+          <tab heading="Messages"> <app-member-messages [recipientId]="user.id"></app-member-messages> </tab>
         </tabset>
       </div>
     </div>

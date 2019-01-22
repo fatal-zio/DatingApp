@@ -156,4 +156,16 @@ export class UserService {
         })
       );
   }
+
+  public getMessageThread(id: number, recipientId: number) {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('token')
+    );
+
+    return this.http.get<Message[]>(
+      this.baseUrl + id + '/messages/thread/' + recipientId,
+      { headers }
+    );
+  }
 }

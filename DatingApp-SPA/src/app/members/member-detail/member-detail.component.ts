@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user';
-import { UserService } from 'src/app/services/user.service';
-import { AlertifyService } from 'src/app/services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import {
   NgxGalleryOptions,
