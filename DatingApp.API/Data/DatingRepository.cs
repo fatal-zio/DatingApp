@@ -102,14 +102,34 @@ namespace DatingApp.API.Data
             return await _context.Messages.FirstOrDefaultAsync(o => o.Id == id);
         }
 
-        public Task<PagedList<Message>> GetMessagesForUser()
+        public Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
         {
-            throw new NotImplementedException();
+            var messages = _context.Messages
+                .Include(o => o.Sender).ThenInclude(o => o.Photos)
+                .Include(o => o.Recipient).ThenInclude(o => o.Photos)
+                .AsQueryable();
+
+            switch (messageParams.MessageContainer)
+            {
+                case "Inbox":
+                    messages = messages.Where(o => o.RecipientId == messageParams.UserId);
+                    break;
+                case "Outbox":
+                    messages = messages.Where(o => o.SenderId == messageParams.UserId);
+                    break;
+                default:
+                    messages = messages.Where(o => o.RecipientId == messageParams.UserId && o.IsRead == false);
+                    break;
+            }
+
+            messages = messages.OrderByDescending(o => o.MessageSent);
+
+            return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
         }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using DatingApp.API.Models;
 using System;
+using System.Collections.Generic;
 
 namespace DatingApp.API.Controllers
 {
@@ -37,6 +38,26 @@ namespace DatingApp.API.Controllers
             }
 
             return Ok(messageFromRepo);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMessagesForUser(int userId, [FromQuery] MessageParams messageParams)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            messageParams.UserId = userId;
+
+            var messagesFromRepo = await _repo.GetMessagesForUser(messageParams);
+
+            var messages = Mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
+
+            Response.AddPagination(messagesFromRepo.CurrentPage, messagesFromRepo.PageSize, 
+                messagesFromRepo.TotalCount, messagesFromRepo.TotalPages);
+
+            return Ok(messages);
         }
 
         [HttpPost]
