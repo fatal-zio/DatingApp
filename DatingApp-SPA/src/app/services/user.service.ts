@@ -12,7 +12,6 @@ import { Message } from '../models/message';
 })
 export class UserService {
   private baseUrl = environment.apiUrl + 'users/';
-  private headers;
 
   constructor(private http: HttpClient) {}
 
@@ -22,6 +21,7 @@ export class UserService {
     userParams?,
     likesParam?
   ): Observable<PaginatedResult<User[]>> {
+    const headers = this.getAuthHeader();
     const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<
       User[]
     >();
@@ -47,10 +47,6 @@ export class UserService {
       params = params.append('likees', 'true');
     }
 
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
     return this.http
       .get<User[]>(this.baseUrl, {
         headers: headers,
@@ -71,26 +67,17 @@ export class UserService {
   }
 
   public getUser(id: number): Observable<User> {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
     return this.http.get<User>(this.baseUrl + id, { headers });
   }
 
   public updateUser(id: number, user: User) {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
     return this.http.put<User>(this.baseUrl + id, user, { headers });
   }
 
   public setMainPhoto(userId: number, photoId: number) {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
     return this.http.post(
       this.baseUrl + userId + '/photos/' + photoId + '/setmain',
       {},
@@ -99,20 +86,14 @@ export class UserService {
   }
 
   public deletePhoto(userId: number, photoId: number) {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
     return this.http.delete(this.baseUrl + userId + '/photos/' + photoId, {
       headers
     });
   }
 
   public sendLike(id: number, recipientId: number) {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
     return this.http.post(
       this.baseUrl + id + '/like/' + recipientId,
       {},
@@ -121,10 +102,7 @@ export class UserService {
   }
 
   public getMessages(id: number, page?, itemsPerPage?, messageContainer?) {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
     const paginatedResult: PaginatedResult<Message[]> = new PaginatedResult<
       Message[]
     >();
@@ -159,10 +137,7 @@ export class UserService {
   }
 
   public getMessageThread(id: number, recipientId: number) {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
 
     return this.http.get<Message[]>(
       this.baseUrl + id + '/messages/thread/' + recipientId,
@@ -171,10 +146,7 @@ export class UserService {
   }
 
   public sendMessage(id: number, message: Message) {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
 
     return this.http.post(this.baseUrl + id + '/messages', message, {
       headers
@@ -182,15 +154,28 @@ export class UserService {
   }
 
   public deleteMessage(id: number, userId: number) {
-    const headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
+    const headers = this.getAuthHeader();
 
     return this.http.post(
       this.baseUrl + userId + '/messages/' + id,
       {},
       { headers }
+    );
+  }
+
+  public markAsRead(userId: number, messageId: number) {
+    const headers = this.getAuthHeader();
+    this.http.post(
+      this.baseUrl + userId + '/messages/' + messageId + '/read',
+      {},
+      { headers }
+    ).subscribe();
+  }
+
+  private getAuthHeader(): HttpHeaders {
+    return new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('token')
     );
   }
 }
