@@ -176,6 +176,21 @@ export class UserService {
       'Bearer ' + localStorage.getItem('token')
     );
 
-    return this.http.post(this.baseUrl + id + '/messages', message, { headers });
+    return this.http.post(this.baseUrl + id + '/messages', message, {
+      headers
+    });
+  }
+
+  public deleteMessage(id: number, userId: number) {
+    const headers = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('token')
+    );
+
+    return this.http.post(
+      this.baseUrl + userId + '/messages/' + id,
+      {},
+      { headers }
+    );
   }
 }
