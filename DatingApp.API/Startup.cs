@@ -50,6 +50,9 @@ namespace DatingApp.API
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             services.AddAutoMapper();
             services.AddTransient<Seed>();
+            services.AddSpaStaticFiles(config => {
+                config.RootPath = "wwwroot";
+            });
 
             services.AddSwaggerGen(c =>
             {
@@ -125,8 +128,16 @@ namespace DatingApp.API
             // app.UseHttpsRedirection();
             seeder.SeedUsers();
             app.UseCors(o => o.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseStaticFiles();
+            app.UseSpaStaticFiles();
+            
+
             app.UseAuthentication();
             app.UseMvc();
+            app.UseSpa(spa => 
+            {
+                spa.Options.SourcePath = "wwwroot";
+            });
         }
     }
 }
