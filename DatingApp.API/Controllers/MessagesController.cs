@@ -12,7 +12,6 @@ using System.Collections.Generic;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
     [Route("api/users/{userId}/messages")]
     [ApiController]
     [ServiceFilter(typeof(LogUserActivity))]

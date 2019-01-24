@@ -7,57 +7,79 @@ using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DatingApp.API.Controllers
 {
+    [AllowAnonymous]
     [Route("api/auth")]
     [ApiController]
     public class AuthController: ControllerBase
     {
-        private readonly IAuthRepository _repo;
+        private readonly UserManager<User> _userManager;
         private readonly IConfiguration _config;
+        private readonly SignInManager<User> _signInManager;
 
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(IConfiguration config, 
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
-            _repo = repo;
             _config = config;
+            _userManager = userManager;
+            _signInManager = signInManager;
         } 
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register(UserForRegistrationDto userForRegistration)
+        public async Task<IActionResult> Register(UserForRegistrationDto userForRegistrationDto)
         {
-            userForRegistration.UserName = userForRegistration.UserName.ToLower();
+            var userToCreate = Mapper.Map<User>(userForRegistrationDto);
+            var result = await _userManager.CreateAsync(userToCreate, userForRegistrationDto.Password);
 
-            if (await _repo.UserExists(userForRegistration.UserName))
+            var userToReturn = Mapper.Map<UserForDetailedDto>(userToCreate);
+
+            if (result.Succeeded)
             {
-                return BadRequest("Username already exists");
+                return CreatedAtRoute("GetUser", 
+                    new { controller = "Users", id = userToCreate.Id}, userToReturn);
             }
 
-            var userToCreate = Mapper.Map<User>(userForRegistration);
-
-            var createdUser = await _repo.Register(userToCreate, userForRegistration.Password);
-            var userToReturn = Mapper.Map<UserForDetailedDto>(createdUser);
-
-            return CreatedAtRoute("GetUser", new { controller = "Users", id = createdUser.Id}, userToReturn);
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            var userFromRepo = await _repo.Login(userForLoginDto.UserName.ToLower(), userForLoginDto.Password);
+            var user = await _userManager.FindByNameAsync(userForLoginDto.UserName);
+            var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
 
-            if (userForLoginDto == null)
+            if (result.Succeeded)
             {
-                return Unauthorized();
+                var appUser = await _userManager.Users.Include(o => o.Photos)
+                    .FirstOrDefaultAsync(o => o.NormalizedUserName == userForLoginDto.UserName.ToUpper());
+                
+                var userToReturn = Mapper.Map<UserForListDto>(appUser);
+
+                return Ok(new 
+                {
+                    token = GenerateJwtToken(appUser),
+                    user = userToReturn
+                });
             }
 
+            return Unauthorized();
+        }
+
+        private string GenerateJwtToken(User user)
+        {
             var claims = new []
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.UserName)
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config.GetSection("AppSettings:Token").Value));
@@ -73,13 +95,7 @@ namespace DatingApp.API.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var user = Mapper.Map<UserForListDto>(userFromRepo);
-
-            return Ok(new {
-                token = tokenHandler.WriteToken(token),
-                user
-            });
+            return tokenHandler.WriteToken(token);
         }
-
     }
 }

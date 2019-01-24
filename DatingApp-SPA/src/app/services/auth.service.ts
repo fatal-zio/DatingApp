@@ -61,6 +61,11 @@ export class AuthService {
     }
   }
 
+  public getKnownAs(): string {
+    const user = JSON.parse(localStorage.getItem('user'));
+    return (user) ? user.knownAs : '';
+  }
+
   public setUser(user: User): void {
     this.currentUser = user;
   }

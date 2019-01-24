@@ -20,7 +20,7 @@
       </span>
 
       <a class="dropdown-toggle text-light" dropdownToggle>
-        Welcome {{ this.authService.getUsername() | titlecase }}
+        Welcome {{ this.authService.getKnownAs() | titlecase }}
       </a>
 
       <div class="dropdown-menu mt-3" *dropdownMenu>

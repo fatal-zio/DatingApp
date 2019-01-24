@@ -12,7 +12,6 @@ using DatingApp.API.Models;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
     [Route("api/users")]
     [ApiController]
     [ServiceFilter(typeof(LogUserActivity))]
