@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-roles-modal',
@@ -7,9 +8,8 @@ import { BsModalRef } from 'ngx-bootstrap';
   styleUrls: ['./roles-modal.component.css']
 })
 export class RolesModalComponent implements OnInit {
-  public title: string;
-  public closeBtnName: string;
-  public list: any[] = [];
+  public user: User;
+  public roles: any[];
 
   constructor(public bsModalRef: BsModalRef) {}
 
