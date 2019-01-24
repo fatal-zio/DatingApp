@@ -9,7 +9,8 @@ import {
   TabsModule,
   BsDatepickerModule,
   PaginationModule,
-  ButtonsModule
+  ButtonsModule,
+  ModalModule
 } from 'ngx-bootstrap';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -41,6 +42,7 @@ import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { HasRoleDirective } from './directives/has-role.directive';
 import { UserManagementComponent } from './admin/user-management/user-management.component';
 import { PhotoManagementComponent } from './admin/photo-management/photo-management.component';
+import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +62,8 @@ import { PhotoManagementComponent } from './admin/photo-management/photo-managem
     AdminPanelComponent,
     HasRoleDirective,
     UserManagementComponent,
-    PhotoManagementComponent
+    PhotoManagementComponent,
+    RolesModalComponent
   ],
   imports: [
     BrowserModule,
@@ -75,7 +78,8 @@ import { PhotoManagementComponent } from './admin/photo-management/photo-managem
     BsDropdownModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     TabsModule.forRoot(),
-    BsDatepickerModule.forRoot()
+    BsDatepickerModule.forRoot(),
+    ModalModule.forRoot()
   ],
   providers: [
     ErrorInterceptorProvider,
@@ -87,6 +91,7 @@ import { PhotoManagementComponent } from './admin/photo-management/photo-managem
     ListsResolver,
     MessagesResolver
   ],
+  entryComponents: [RolesModalComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
