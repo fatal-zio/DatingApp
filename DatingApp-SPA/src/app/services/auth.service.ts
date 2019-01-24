@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from '../../environments/environment';
 import { User } from '../models/user';
+import { element } from '@angular/core/src/render3';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +17,12 @@ export class AuthService {
   private currentUser: User;
   public currentPhotoUrl = this.photoUrl.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   public login(model: any) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post(this.baseUrl + 'login', JSON.stringify(model), {headers})
+    return this.http
+      .post(this.baseUrl + 'login', JSON.stringify(model), { headers })
       .pipe(
         map((response: any) => {
           const user = response;
@@ -43,7 +45,7 @@ export class AuthService {
 
   public register(user: User) {
     const headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.http.post(this.baseUrl + 'register', user, {headers});
+    return this.http.post(this.baseUrl + 'register', user, { headers });
   }
 
   public loggedIn() {
@@ -63,7 +65,7 @@ export class AuthService {
 
   public getKnownAs(): string {
     const user = JSON.parse(localStorage.getItem('user'));
-    return (user) ? user.knownAs : '';
+    return user ? user.knownAs : '';
   }
 
   public setUser(user: User): void {
@@ -80,4 +82,22 @@ export class AuthService {
     }
   }
 
+  public roleMatch(allowedRoles: string[]): boolean {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    let isMatch = false;
+    const userRoles = decodedToken.role as Array<string>;
+
+    if (allowedRoles) {
+      // tslint:disable-next-line:no-shadowed-variable
+      allowedRoles.forEach((element: string) => {
+        if (userRoles.includes(element)) {
+          isMatch = true;
+          return;
+        }
+      });
+    }
+
+    return isMatch;
+  }
 }

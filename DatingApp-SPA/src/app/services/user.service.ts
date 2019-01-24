@@ -165,11 +165,13 @@ export class UserService {
 
   public markAsRead(userId: number, messageId: number) {
     const headers = this.getAuthHeader();
-    this.http.post(
-      this.baseUrl + userId + '/messages/' + messageId + '/read',
-      {},
-      { headers }
-    ).subscribe();
+    this.http
+      .post(
+        this.baseUrl + userId + '/messages/' + messageId + '/read',
+        {},
+        { headers }
+      )
+      .subscribe();
   }
 
   private getAuthHeader(): HttpHeaders {
