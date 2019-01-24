@@ -82,6 +82,13 @@ export class AuthService {
     }
   }
 
+  public getRoles(): string[] {
+    const token = localStorage.getItem('token');
+    const decodedToken = this.jwtHelper.decodeToken(token);
+    const roles = decodedToken.role as Array<string>;
+    return (roles) ? roles : [];
+  }
+
   public roleMatch(allowedRoles: string[]): boolean {
     const token = localStorage.getItem('token');
     const decodedToken = this.jwtHelper.decodeToken(token);

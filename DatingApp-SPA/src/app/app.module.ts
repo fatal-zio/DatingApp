@@ -38,6 +38,7 @@ import { ListsResolver } from './resolvers/lists.resolver';
 import { MessagesResolver } from './resolvers/messages.resolver';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
+import { HasRoleDirective } from './directives/has-role.directive';
 
 @NgModule({
   declarations: [
@@ -54,7 +55,8 @@ import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
     MemberEditComponent,
     PhotoEditorComponent,
     TimeAgoPipe,
-    AdminPanelComponent
+    AdminPanelComponent,
+    HasRoleDirective
   ],
   imports: [
     BrowserModule,
