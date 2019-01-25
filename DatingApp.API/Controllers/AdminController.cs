@@ -1,12 +1,12 @@
+using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using DatingApp.API.Dtos;
-using Microsoft.AspNetCore.Identity;
 using DatingApp.API.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers
 {
@@ -31,8 +31,8 @@ namespace DatingApp.API.Controllers
             var userList = await (from user in _context.Users orderby user.UserName
                                     select new 
                                     {
-                                        Id = user.Id,
-                                        UserName = user.UserName,
+                                        user.Id,
+                                        user.UserName,
                                         Roles = (from userRole in user.UserRoles
                                                     join role in _context.Roles
                                                     on userRole.RoleId 

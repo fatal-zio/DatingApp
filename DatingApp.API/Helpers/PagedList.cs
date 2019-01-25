@@ -13,7 +13,7 @@ namespace DatingApp.API.Helpers
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
 
-        public PagedList(List<T> items, int count, int pageNumber, int pageSize)
+        public PagedList(IEnumerable<T> items, int count, int pageNumber, int pageSize)
         {
             TotalCount = count;
             PageSize = pageSize;

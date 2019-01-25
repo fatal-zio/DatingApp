@@ -82,14 +82,8 @@ namespace DatingApp.API.Data
             var user = await _context.Users.Include(o => o.Likers).Include(o => o.Likees)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
-            if (likers)
-            {
-                return user.Likers.Where(o => o.LikeeId == id).Select(o => o.LikerId);
-            }
-            else
-            {
-                return user.Likees.Where(o => o.LikerId == id).Select(o => o.LikeeId);
-            }
+            return likers ? user.Likers.Where(o => o.LikeeId == id).Select(o => o.LikerId) : 
+                    user.Likees.Where(o => o.LikerId == id).Select(o => o.LikeeId);
         }   
 
         public async Task<bool> SaveAll()

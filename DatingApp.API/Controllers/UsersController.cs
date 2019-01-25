@@ -2,7 +2,6 @@ using AutoMapper;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Security.Claims;

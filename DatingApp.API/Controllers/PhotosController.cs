@@ -21,14 +21,14 @@ namespace DatingApp.API.Controllers
     {
         private readonly IDatingRepository _repo;
         private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
-        private Cloudinary _cloudinary;
+        private readonly Cloudinary _cloudinary;
 
         public PhotosController(IDatingRepository repo, IOptions<CloudinarySettings> cloudinaryConfig)
         {
             _repo = repo;
             _cloudinaryConfig = cloudinaryConfig;
 
-            Account acc = new Account(
+            var acc = new Account(
                 _cloudinaryConfig.Value.CloudName,
                 _cloudinaryConfig.Value.ApiKey,
                 _cloudinaryConfig.Value.ApiSecret.Decode()
@@ -62,7 +62,7 @@ namespace DatingApp.API.Controllers
             {
                 using (var stream = file.OpenReadStream())
                 {
-                    var uploadParams = new ImageUploadParams()
+                    var uploadParams = new ImageUploadParams
                     {
                         File = new FileDescription(file.Name, stream),
                         Transformation = new Transformation().Width(500).Height(500).Crop("fill").Gravity("face")
@@ -99,7 +99,7 @@ namespace DatingApp.API.Controllers
 
             var user = await _repo.GetUser(userId);
 
-            if (!user.Photos.Any(o => o.Id == id))
+            if (user.Photos.All(o => o.Id != id))
             {
                 return NotFound();
             }
@@ -130,7 +130,7 @@ namespace DatingApp.API.Controllers
 
             var user = await _repo.GetUser(userId);
 
-            if (!user.Photos.Any(o => o.Id == id))
+            if (user.Photos.All(o => o.Id != id))
             {
                 return NotFound();
             }
